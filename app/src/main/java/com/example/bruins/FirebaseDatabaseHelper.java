@@ -16,7 +16,10 @@ public class FirebaseDatabaseHelper {
     private List<Staff> staffs = new ArrayList<>();
 
     public interface DataStatus {
-
+        void DataIsLoaded(List<Staff> staff, List<String> keys);
+        void DataIsInserted();
+        void DataIsUpdated();
+        void DataIsDeleted();
     }
 
     public FirebaseDatabaseHelper() {
@@ -25,7 +28,7 @@ public class FirebaseDatabaseHelper {
 
     }
 
-    public void readStaff() {
+    public void readStaff(final DataStatus dataStatus) {
         mReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -36,6 +39,8 @@ public class FirebaseDatabaseHelper {
                     Staff staff = keyNode.getValue(Staff.class);
                     staffs.add(staff);
                 }
+
+                dataStatus.DataIsLoaded(staffs, keys);
 
             }
 
