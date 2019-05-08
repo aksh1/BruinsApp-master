@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view"
+    >
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:title="Home" />
+        <item
+            android:id="@+id/nav_calendar"
+            android:title="Calendar" />
+        <item
+            android:id="@+id/nav_map"
+            android:title="Map" />
+        <item
+            android:id="@+id/nav_bellSchedule"
+            android:title="Bell Schedule" />
+        <item
+            android:id="@+id/nav_clubs"
+            android:title="Clubs" />
+        <item
+            android:id="@+id/nav_council"
+            android:title="Student Council" />
+    </group>
+
+</menu>
