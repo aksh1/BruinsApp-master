@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainSchedule"></activity>
+        <activity android:name=".MainStaff"></activity>
     </application>
 
 </manifest>

@@ -1,6 +1,7 @@
 package com.example.bruins;
 import android.support.annotation.NonNull;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,7 +25,7 @@ public class FirebaseDatabaseHelper {
 
     public FirebaseDatabaseHelper() {
         mDatabase = FirebaseDatabase.getInstance();
-        mReference = mDatabase.getReference("books");
+        mReference = mDatabase.getReference("staff");
 
     }
 
