@@ -24,6 +24,7 @@ public class FirebaseDatabaseHelper {
     }
 
     public FirebaseDatabaseHelper() {
+
         mDatabase = FirebaseDatabase.getInstance();
         mReference = mDatabase.getReference("staff");
 

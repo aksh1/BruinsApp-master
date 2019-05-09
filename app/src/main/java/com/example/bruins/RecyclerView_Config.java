@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -14,6 +15,8 @@ import java.util.List;
 public class RecyclerView_Config {
     private Context mContext;
     private StaffAdapter mStaffAdapter;
+
+
 
     public void setConfig(RecyclerView recyclerView, Context context, List<Staff> staff, List<String> keys) {
 
@@ -25,9 +28,12 @@ public class RecyclerView_Config {
     }
 
 
-    class StaffItemView extends RecyclerView.ViewHolder {
+
+      class StaffItemView extends RecyclerView.ViewHolder {
         private TextView mName;
         private TextView mEmail;
+
+
 
 
 
