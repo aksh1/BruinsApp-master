@@ -8,7 +8,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/MyMaterialTheme">
+        android:theme="@style/MyMaterialTheme.Base">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
@@ -19,7 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainSchedule"></activity>
-        <activity android:name=".MainStaff"></activity>
+        <activity android:name=".MainStaff" android:theme="@style/AppTheme" android:label="Staff Directory">
+        </activity>
     </application>
 
 </manifest>

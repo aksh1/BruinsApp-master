@@ -1,35 +1,42 @@
 {
   "project_info": {
-    "project_number": "593493481444",
-    "firebase_url": "https://bruins-master.firebaseio.com",
-    "project_id": "bruins-master",
-    "storage_bucket": "bruins-master.appspot.com"
+    "project_number": "232542144932",
+    "firebase_url": "https://bruinsapp-65554.firebaseio.com",
+    "project_id": "bruinsapp-65554",
+    "storage_bucket": "bruinsapp-65554.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:593493481444:android:dac82227b74af069",
+        "mobilesdk_app_id": "1:232542144932:android:dac82227b74af069",
         "android_client_info": {
           "package_name": "com.example.bruins"
         }
       },
       "oauth_client": [
         {
-          "client_id": "593493481444-9j3hdcl0bfimuuj48jobi6hhf7pjr2le.apps.googleusercontent.com",
+          "client_id": "232542144932-s96u42ps3uovngdr601m4n7lnbkbvd28.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAN0ik1u0I11_U7fwi5nrQ3qgOgV4e3lrU"
+          "current_key": "AIzaSyB0GkjW_9OX-EHqKa13Xfm9v5Kppk6WSjQ"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "593493481444-9j3hdcl0bfimuuj48jobi6hhf7pjr2le.apps.googleusercontent.com",
+              "client_id": "232542144932-s96u42ps3uovngdr601m4n7lnbkbvd28.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "232542144932-9uuso6korhe18rcfdahguto891smu6ku.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.rishab.BruinsApp"
+              }
             }
           ]
         }
