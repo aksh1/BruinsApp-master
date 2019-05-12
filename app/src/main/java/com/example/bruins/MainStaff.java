@@ -5,6 +5,7 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
@@ -14,7 +15,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import android.view.Menu;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.google.firebase.FirebaseApp;
@@ -34,6 +39,8 @@ public class MainStaff extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.staff_main);
 
+
+
         constraintLayout = findViewById(R.id.constraint);
 
         Snackbar.make(constraintLayout,
@@ -44,6 +51,24 @@ public class MainStaff extends AppCompatActivity {
 
         FirebaseApp.initializeApp(this);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+
+        mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
+
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
+
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean b) {
+
+            }
+        });
         new FirebaseDatabaseHelper().readStaff(new FirebaseDatabaseHelper.DataStatus() {
             @Override
             public void DataIsLoaded(List<Staff> staff, List<String> keys) {
@@ -73,4 +98,6 @@ public class MainStaff extends AppCompatActivity {
 
 
     }
+
+
 }

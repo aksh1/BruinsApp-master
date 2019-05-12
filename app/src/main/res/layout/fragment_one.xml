@@ -183,7 +183,7 @@
 
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="lunch: 12:44 - 2:08" />
+                        android:text="6: 12:44 - 2:08" />
 
                 </LinearLayout>
 

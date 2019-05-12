@@ -57,7 +57,7 @@ public class RecyclerView_Config {
     }
 
     class StaffAdapter extends RecyclerView.Adapter<StaffItemView>{
-        private List<Staff> mStaffList;
+        public List<Staff> mStaffList;
         private List<String> mKeys;
 
         public StaffAdapter(List<Staff> mStaffList, List<String> mKeys) {
