@@ -15,6 +15,7 @@ import java.util.List;
 public class RecyclerView_Config {
     private Context mContext;
     private StaffAdapter mStaffAdapter;
+    private List<Staff> staff;
 
 
 
@@ -24,6 +25,7 @@ public class RecyclerView_Config {
         mStaffAdapter = new StaffAdapter(staff, keys);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(mStaffAdapter);
+        this.staff = staff;
 
     }
 
@@ -48,7 +50,7 @@ public class RecyclerView_Config {
 
         public void bind(Staff staff, String key) {
             mName.setText(staff.getName());
-            mEmail.setText(staff.getEmail());
+            mEmail.setText(statEmail());
             this.key = key;
         }
 

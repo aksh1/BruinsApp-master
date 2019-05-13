@@ -11,28 +11,82 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.app.SearchManager;
+import android.support.v7.widget.util.SortedListAdapterCallback;
+import android.widget.Filter;
+import android.widget.SearchView.OnQueryTextListener;
 
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ListView;
+import android.support.v7.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.google.firebase.FirebaseApp;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class MainStaff extends AppCompatActivity {
+public class MainStaff extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
 
     private RecyclerView mRecyclerView;
     private Context mContext;
     private RecyclerView_Config.StaffAdapter mStaffAdapter;
     private ConstraintLayout constraintLayout;
+    SearchView searchView;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(this);
+
+        return true;
+    }
+
+
+    public boolean onQueryTextChange(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_search) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        // close search view on back button pressed
+        if (!searchView.isIconified()) {
+            searchView.setIconified(true);
+            return;
+        }
+        super.onBackPressed();
+    }
+
+
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,23 +106,6 @@ public class MainStaff extends AppCompatActivity {
         FirebaseApp.initializeApp(this);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
 
-        mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
-
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
-
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean b) {
-
-            }
-        });
         new FirebaseDatabaseHelper().readStaff(new FirebaseDatabaseHelper.DataStatus() {
             @Override
             public void DataIsLoaded(List<Staff> staff, List<String> keys) {
@@ -100,4 +137,49 @@ public class MainStaff extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
+
+    private final SortedList.Callback<Staff> mCallback = new SortedList.Callback<Staff>() {
+
+        @Override
+        public void onInserted(int position, int count) {
+            mStaffAdapter.notifyItemRangeInserted(position, count);
+        }
+
+        @Override
+        public void onRemoved(int position, int count) {
+            mStaffAdapter.notifyItemRangeRemoved(position, count);
+        }
+
+        @Override
+        public void onMoved(int fromPosition, int toPosition) {
+            mStaffAdapter.notifyItemMoved(fromPosition, toPosition);
+        }
+
+        @Override
+        public int compare(Staff staff, Staff t21) {
+            return 0;
+        }
+
+        @Override
+        public void onChanged(int position, int count) {
+            mStaffAdapter.notifyItemRangeChanged(position, count);
+        }
+
+        @Override
+        public boolean areContentsTheSame(Staff staff, Staff t21) {
+            return false;
+        }
+
+        @Override
+        public boolean areItemsTheSame(Staff staff, Staff t21) {
+            return false;
+        }
+    };
+
 }
+
+
