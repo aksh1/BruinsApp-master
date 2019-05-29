@@ -1,13 +1,17 @@
 package com.example.bruins;
 
+import android.annotation.TargetApi;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,8 +20,14 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 
 public class FragmentTwo extends Fragment {
@@ -25,72 +35,44 @@ public class FragmentTwo extends Fragment {
     Handler handler;
     Runnable runnable;
     private TextView txtTimerDay, txtTimerHour, txtTimerMinute, txtTimerSecond;
-    private TextView tvEvent;
+    TextView tvEvent;
     IntentFilter s_intentFilter;
-    TextView tdate;
+    Thread thread;
+    Date date;
+    Date date1, date2;
+    long convertedLong;
+    long currentTimeLong;
 
     public FragmentTwo() {
         // Required empty public constructor
-
     }
-
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        tdate = (TextView) Objects.requireNonNull(getView()).findViewById(R.id.textView1);
-        Thread t = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    while (!isInterrupted()) {
-                        Thread.sleep(1000);
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                long date = System.currentTimeMillis();
-                                SimpleDateFormat sdf = new SimpleDateFormat("hh-mm-ss a");
-                                SimpleDateFormat minus = new SimpleDateFormat("hh-mm-ss a");
-                                String dateString = sdf.format(date);
-                                String futureDate = minus.format(date);
-                                tdate.setText(futureDate);
-                            }
-                        });
-                    }
-                } catch (InterruptedException e) {
-                }
-            }
-        };
-//        t.start();
-        new CountDownTimer(30000, 1000) {
 
-            public void onTick(long millisUntilFinished) {
-                tdate.setText("seconds remaining: " + millisUntilFinished / 1000);
-            }
-
-            public void onFinish() {
-                tdate.setText("done!");
-            }
-        }.start();
     }
 
 
 
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
 
         return inflater.inflate(R.layout.fragment_two, container, false);
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        txtTimerDay = (TextView) getView().findViewById(R.id.txtTimerDay);
-        txtTimerHour = (TextView) getView().findViewById(R.id.txtTimerHour);
-        txtTimerMinute = (TextView) getView().findViewById(R.id.txtTimerMinute);
-        txtTimerSecond = (TextView) getView().findViewById(R.id.txtTimerSecond);
-        tvEvent = (TextView) getView().findViewById(R.id.tvhappyevent);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
+
+
 
     }
 

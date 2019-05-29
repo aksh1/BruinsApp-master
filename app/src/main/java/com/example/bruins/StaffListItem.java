@@ -8,12 +8,13 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class StaffListItem extends AppCompatActivity {
 
-    ConstraintLayout layout;
+    RelativeLayout layout;
     TextView textView;
     Button button;
 
@@ -22,7 +23,7 @@ public class StaffListItem extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.staff_list_item);
 
-        layout = (ConstraintLayout) findViewById(R.id.constraint);
+        layout = (RelativeLayout) findViewById(R.id.constraint);
         textView = findViewById(R.id.email_txtView);
 
 

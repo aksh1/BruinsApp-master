@@ -1,6 +1,8 @@
 package com.example.bruins;
 
 import android.content.Context;
+import android.databinding.adapters.AdapterViewBindingAdapter;
+import android.renderscript.ScriptGroup;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,7 +11,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 
+import java.util.Observable;
+
+import java.util.Comparator;
 import java.util.List;
 
 public class RecyclerView_Config {
@@ -32,12 +39,10 @@ public class RecyclerView_Config {
 
 
       class StaffItemView extends RecyclerView.ViewHolder {
+
+
         private TextView mName;
         private TextView mEmail;
-
-
-
-
 
         private String key;
 
@@ -50,7 +55,7 @@ public class RecyclerView_Config {
 
         public void bind(Staff staff, String key) {
             mName.setText(staff.getName());
-            mEmail.setText(statEmail());
+            mEmail.setText(staff.getEmail());
             this.key = key;
         }
 
@@ -66,7 +71,6 @@ public class RecyclerView_Config {
             this.mStaffList = mStaffList;
             this.mKeys = mKeys;
         }
-
         @NonNull
         @Override
         public StaffItemView onCreateViewHolder(@NonNull ViewGroup parent, int i) {
@@ -78,6 +82,25 @@ public class RecyclerView_Config {
             holder.bind(mStaffList.get(position), mKeys.get(position));
 
         }
+
+
+        private LayoutInflater mInflater;
+
+        private Comparator<Staff> mComparator;
+
+//        public ExampleAdapter(Context context, Comparator<Staff> comparator) {
+//            mInflater = LayoutInflater.from(context);
+//            mComparator = comparator;
+//        }
+
+
+//        @Override
+//        public void onBindViewHolder(ExampleViewHolder holder, int position) {
+//            final ExampleModel model = mSortedList.get(position);
+//            holder.bind(model);
+//        }
+
+
 
         @Override
         public int getItemCount() {

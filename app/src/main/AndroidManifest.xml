@@ -22,6 +22,7 @@
         <activity android:name=".MainStaff" android:theme="@style/AppTheme" android:label="Staff Directory">
         </activity>
         <activity android:name=".StaffListItem"></activity>
+        <activity android:name=".MapActivity"></activity>
     </application>
 
 </manifest>

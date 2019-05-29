@@ -17,6 +17,8 @@ import android.support.v7.widget.RecyclerView;
 import android.app.SearchManager;
 import android.support.v7.widget.util.SortedListAdapterCallback;
 import android.widget.Filter;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.SearchView.OnQueryTextListener;
 
 import android.view.Menu;
@@ -40,7 +42,7 @@ public class MainStaff extends AppCompatActivity implements SearchView.OnQueryTe
     private RecyclerView mRecyclerView;
     private Context mContext;
     private RecyclerView_Config.StaffAdapter mStaffAdapter;
-    private ConstraintLayout constraintLayout;
+    private RelativeLayout constraintLayout;
     SearchView searchView;
 
     @Override
@@ -55,6 +57,7 @@ public class MainStaff extends AppCompatActivity implements SearchView.OnQueryTe
 
 
     public boolean onQueryTextChange(String query) {
+
         return false;
     }
 
@@ -93,6 +96,11 @@ public class MainStaff extends AppCompatActivity implements SearchView.OnQueryTe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.staff_main);
 
+        final ProgressBar mProgressCircle = findViewById(R.id.progress_circle);
+
+        mProgressCircle.setVisibility(View.VISIBLE);
+
+
 
 
         constraintLayout = findViewById(R.id.constraint);
@@ -115,6 +123,7 @@ public class MainStaff extends AppCompatActivity implements SearchView.OnQueryTe
                     e.printStackTrace();
                 }
                 new RecyclerView_Config().setConfig(mRecyclerView, MainStaff.this, staff, keys);
+                mProgressCircle.setVisibility(View.INVISIBLE);
             }
 
             @Override
