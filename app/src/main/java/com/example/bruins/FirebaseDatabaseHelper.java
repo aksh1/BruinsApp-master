@@ -1,4 +1,5 @@
 package com.example.bruins;
+
 import android.support.annotation.NonNull;
 
 import com.google.firebase.FirebaseApp;

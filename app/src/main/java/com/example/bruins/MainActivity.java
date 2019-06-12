@@ -1,7 +1,11 @@
 package com.example.bruins;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -54,17 +58,37 @@ public class MainActivity extends AppCompatActivity
 
     private RecyclerView mRecyclerView;
     private ImageAdapter mAdapter;
+    private ImageView upload;
 
     private ProgressBar mProgressCircle;
 
     private DatabaseReference mDatabaseRef;
     private List<Upload> mUploads;
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        upload = findViewById(R.id.imageView4);
+
+        upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+
+        toolbar.setTitle("");
+
+
+
+
+
 
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -101,6 +125,8 @@ public class MainActivity extends AppCompatActivity
 
                 mAdapter = new ImageAdapter(MainActivity.this, mUploads);
 
+                Collections.reverse(mUploads);
+
                 mRecyclerView.setAdapter(mAdapter);
                 mProgressCircle.setVisibility(View.INVISIBLE);
             }
@@ -111,9 +137,6 @@ public class MainActivity extends AppCompatActivity
                 mProgressCircle.setVisibility(View.INVISIBLE);
             }
         });
-
-
-
 
 
 
@@ -191,6 +214,10 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_clubs) {
+
+            Intent clubsIntent = new Intent(getApplicationContext(), ClubsActivity.class);
+            startActivity(clubsIntent);
+            mProgressCircle.setVisibility(View.GONE);
 
         } else if (id == R.id.nav_council) {
 

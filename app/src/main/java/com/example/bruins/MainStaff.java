@@ -76,15 +76,15 @@ public class MainStaff extends AppCompatActivity implements SearchView.OnQueryTe
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onBackPressed() {
-        // close search view on back button pressed
-        if (!searchView.isIconified()) {
-            searchView.setIconified(true);
-            return;
-        }
-        super.onBackPressed();
-    }
+//    @Override
+//    public void onBackPressed() {
+//        // close search view on back button pressed
+//        if (!searchView.isIconified()) {
+//            searchView.setIconified(true);
+//            return;
+//        }
+//        super.onBackPressed();
+//    }
 
 
     public boolean onQueryTextSubmit(String query) {

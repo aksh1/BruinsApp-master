@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.bruins">
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -8,7 +11,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/MyMaterialTheme.Base">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
@@ -19,10 +22,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainSchedule"></activity>
-        <activity android:name=".MainStaff" android:theme="@style/AppTheme" android:label="Staff Directory">
+        <activity android:name=".MainStaff" android:theme="@style/Theme.AppCompat.Light.NoActionBar" android:label="Staff Directory">
         </activity>
         <activity android:name=".StaffListItem"></activity>
         <activity android:name=".MapActivity"></activity>
+        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".ImagesUploadActivity"></activity>
+        <activity android:name=".ClubsActivity" />
     </application>
 
 </manifest>

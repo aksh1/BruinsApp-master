@@ -1,6 +1,5 @@
 package com.example.bruins;
 
-import android.support.v7.util.SortedList;
 
 import java.util.Comparator;
 

@@ -3,15 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="wrap_content"
-        android:layout_height="652dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="-22dp"
-        tools:srcCompat="@tools:sample/backgrounds/scenic[19]" />
-</LinearLayout>
+<include layout="@layout/toolbar"></include>
+
+<ImageView
+android:id="@+id/imageView3"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+app:srcCompat="@drawable/bruins" />
+    </LinearLayout>
