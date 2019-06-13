@@ -86,11 +86,6 @@ public class MainActivity extends AppCompatActivity
         toolbar.setTitle("");
 
 
-
-
-
-
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);

@@ -33,8 +33,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -61,6 +64,8 @@ public class ImagesUploadActivity extends AppCompatActivity {
 
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
+    private DatabaseReference mUsernameRef;
+    private DatabaseReference mUserRef;
 
     private StorageTask mUploadTask;
 
@@ -70,7 +75,11 @@ public class ImagesUploadActivity extends AppCompatActivity {
 
     FirebaseAuth mAuth;
 
-    User user;
+    String email;
+
+    String username;
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -86,7 +95,40 @@ public class ImagesUploadActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_images);
 
+        mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
+
+        mUserRef = FirebaseDatabase.getInstance().getReference("users");
+
+
+
+
         mAuth = FirebaseAuth.getInstance();
+
+        email = getIntent().getStringExtra("Email");
+
+        String regx = "@.";
+        char[] ca = regx.toCharArray();
+        for (char c : ca) {
+            email = email.replace(""+c, "");
+        }
+
+        mUsernameRef = mUserRef.child(email).child("username");
+
+
+
+        mUsernameRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                username = dataSnapshot.getValue(String.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+        toastMessage(username);
 
 
 
@@ -99,13 +141,6 @@ public class ImagesUploadActivity extends AppCompatActivity {
             Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         }
 
-
-
-
-
-
-        user = new User();
-
         mButtonChooseImage = findViewById(R.id.button_choose_image);
         mButtonUpload = findViewById(R.id.button_upload);
         mEditTextFileName = findViewById(R.id.edit_text_file_name);
@@ -114,8 +149,7 @@ public class ImagesUploadActivity extends AppCompatActivity {
 
 
 
-        mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
+
 
         mButtonChooseImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,12 +164,7 @@ public class ImagesUploadActivity extends AppCompatActivity {
                 if (mUploadTask != null && mUploadTask.isInProgress()) {
                     Toast.makeText(ImagesUploadActivity.this, "Upload in progress", Toast.LENGTH_SHORT).show();
                 } else {
-                    try {
-                        uploadFile();
-                    } catch (InterruptedException e) {
-                        Toast.makeText(ImagesUploadActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                        e.printStackTrace();
-                    }
+                    uploadFile();
                 }
             }
         });
@@ -178,15 +207,10 @@ public class ImagesUploadActivity extends AppCompatActivity {
         }
     }
 
-    private String getFileExtension(Uri uri) {
-        ContentResolver cR = getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(cR.getType(uri));
-    }
 
-    private void uploadFile() throws InterruptedException {
+    private void uploadFile() {
         if (mImageUri != null) {
-            final StorageReference fileReference = mStorageRef.child(String.valueOf(mEditTextFileName.getText().toString()));
+            final StorageReference fileReference = mStorageRef.child(mEditTextFileName.getText().toString());
 
 
             mUploadTask = fileReference.putFile(mImageUri)
@@ -206,7 +230,10 @@ public class ImagesUploadActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     // Got the download URL for 'users/me/profile.png'
-                                    upload = new Upload(mEditTextFileName.getText().toString().trim(), uri.toString());
+
+
+
+                                    upload = new Upload(mEditTextFileName.getText().toString().trim(), uri.toString(), username);
                                     Log.d("URLLINK", uri.toString());
                                     String uploadId = mDatabaseRef.push().getKey();
                                     mDatabaseRef.child(uploadId).setValue(upload);

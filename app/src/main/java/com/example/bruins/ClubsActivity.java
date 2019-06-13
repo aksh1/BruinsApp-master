@@ -1,5 +1,6 @@
 package com.example.bruins;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
@@ -8,14 +9,17 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.ProgressBar;
 
 import java.util.Objects;
 
 public class ClubsActivity extends AppCompatActivity {
 
     WebView mWebView;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,14 +44,20 @@ public class ClubsActivity extends AppCompatActivity {
         startActivity(intent1);
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     public void loadWebPage() {
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         mWebView.loadUrl("https://docs.google.com/spreadsheets/d/e/2PACX-1vTGZ0qvwFJy1vKAS-5LWjIV5S4_-Vf8HiugGk9n7cjd83xX1RqbUBfOLf557wZs72uS1Ylr1U9oVW7d/pubhtml");
+        progressBar.setVisibility(View.GONE);
 
     }
 
     public void setup() {
+
+        progressBar = findViewById(R.id.progressBar);
+
+        progressBar.setVisibility(View.VISIBLE);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
 
