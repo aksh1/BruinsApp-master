@@ -1,20 +1,15 @@
 package com.example.bruins;
 
 import android.content.Context;
-import android.databinding.adapters.AdapterViewBindingAdapter;
-import android.renderscript.ScriptGroup;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.databinding.adapters.AdapterViewBindingAdapter;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.databinding.BaseObservable;
-import android.databinding.Bindable;
-
-import java.util.Observable;
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
 
 import java.util.Comparator;
 import java.util.List;

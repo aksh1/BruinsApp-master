@@ -1,39 +1,28 @@
 package com.example.bruins;
 
-import android.annotation.TargetApi;
-import android.app.ActionBar;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.util.SortedList;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.app.SearchManager;
-import android.support.v7.widget.util.SortedListAdapterCallback;
-import android.widget.Filter;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.google.android.material.snackbar.Snackbar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.SortedList;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SortedListAdapterCallback;
+
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.SearchView.OnQueryTextListener;
 
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ListView;
-import android.support.v7.widget.SearchView;
-import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.appcompat.widget.SearchView;
 
 
 import com.google.firebase.FirebaseApp;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainStaff extends AppCompatActivity implements SearchView.OnQueryTextListener {

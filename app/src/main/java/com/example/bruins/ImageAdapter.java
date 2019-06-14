@@ -1,8 +1,8 @@
 package com.example.bruins;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.github.chrisbanes.photoview.PhotoView;
 import com.squareup.picasso.Picasso;
 
-import java.util.Collections;
 import java.util.List;
 
 
@@ -43,7 +43,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         Picasso.get()
                 .load(uploadCurrent.getImageUrl())
                 .placeholder(R.mipmap.ic_launcher)
-//                .centerInside()
+                .fit()
                 .into(holder.imageView);
 
 
@@ -57,14 +57,14 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     public class ImageViewHolder extends RecyclerView.ViewHolder {
         public TextView textViewUsername;
         public TextView textViewName;
-        public ImageView imageView;
+        public PhotoView imageView;
 
         public ImageViewHolder(View itemView) {
             super(itemView);
 
             textViewUsername = itemView.findViewById(R.id.text_view_username);
             textViewName = itemView.findViewById(R.id.text_view_name);
-            imageView = itemView.findViewById(R.id.image_view_upload);
+            imageView = (PhotoView) itemView.findViewById(R.id.image_view_upload);
         }
     }
 }
