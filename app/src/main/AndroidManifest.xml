@@ -14,9 +14,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        >
         <activity
             android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,15 +25,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainSchedule"></activity>
-        <activity android:name=".MainStaff" android:theme="@style/Theme.AppCompat.Light.NoActionBar" android:label="Staff Directory">
+        <activity android:name=".MainSchedule" android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".StaffActivity" android:theme="@style/AppTheme" android:label="Staff Directory">
         </activity>
         <activity android:name=".StaffListItem"></activity>
-        <activity android:name=".MapActivity"></activity>
-        <activity android:name=".LoginActivity"></activity>
-        <activity android:name=".ImagesUploadActivity"></activity>
-        <activity android:name=".ClubsActivity"></activity>
-        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"/>
+        <activity android:name=".MapActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".LoginActivity" android:theme="@style/AppTheme" android:label="Login"></activity>
+        <activity android:name=".ImagesUploadActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".ClubsActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity" android:theme="@style/CropTheme"></activity>
     </application>
 
 </manifest>

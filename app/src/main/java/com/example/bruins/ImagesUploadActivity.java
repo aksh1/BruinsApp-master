@@ -90,11 +90,12 @@ public class ImagesUploadActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_images);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
 
         mUserRef = FirebaseDatabase.getInstance().getReference("users");
-
 
 
 
@@ -126,15 +127,11 @@ public class ImagesUploadActivity extends AppCompatActivity {
         toastMessage(username);
 
 
+        setSupportActionBar(toolbar);
 
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-
-//        setSupportActionBar(toolbar);
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//            Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-//        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        }
 
         mButtonChooseImage = findViewById(R.id.button_choose_image);
         mButtonUpload = findViewById(R.id.button_upload);

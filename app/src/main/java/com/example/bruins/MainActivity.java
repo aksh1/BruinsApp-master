@@ -10,6 +10,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import android.view.View;
 import com.google.android.material.navigation.NavigationView;
+
+import androidx.annotation.StyleRes;
+import androidx.appcompat.app.ActionBar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -17,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.ImageView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,6 +38,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 
 import com.google.firebase.storage.FirebaseStorage;
@@ -51,25 +56,16 @@ public class MainActivity extends AppCompatActivity
     private DatabaseReference mDatabaseRef;
     private List<Upload> mUploads;
 
+    public static final String PATH = "uploads";
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        upload = findViewById(R.id.imageView4);
-
-        upload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
-
-        toolbar.setTitle("");
 
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -93,7 +89,7 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference(PATH);
 
 
         mDatabaseRef.addValueEventListener(new ValueEventListener() {
@@ -132,7 +128,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(MainActivity.this, MainStaff.class);
+                Intent intent = new Intent(MainActivity.this, StaffActivity.class);
                 startActivity(intent);
 
             }
@@ -206,6 +202,9 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, MapActivity.class);
             startActivity(intent);
             mProgressCircle.setVisibility(View.GONE);
+        } else if(id == R.id.nav_post){
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

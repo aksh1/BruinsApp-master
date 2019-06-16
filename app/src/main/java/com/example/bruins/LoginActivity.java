@@ -219,8 +219,9 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void toolbarSetup() {
-        final Toolbar toolbar = findViewById(R.id.toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
 //        setSupportActionBar(toolbar);
 //

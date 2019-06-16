@@ -7,7 +7,6 @@
 
     tools:context="com.example.bruins.LoginActivity">
 
-    <include layout="@layout/toolbar"></include>
 
     <ScrollView
         android:id="@+id/login_form"

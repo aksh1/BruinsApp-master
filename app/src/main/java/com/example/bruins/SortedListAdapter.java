@@ -247,4 +247,6 @@ public abstract class SortedListAdapter<T extends SortedListAdapter.ViewModel> e
 
     public interface ViewModel {
     }
+
+
 }
