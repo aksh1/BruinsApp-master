@@ -1,11 +1,14 @@
 package com.example.bruins;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
@@ -44,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
     String usernameString;
     private EditText mEmail, mPassword, mUsername, mEmailForgotPassword;
     private Button btnSignIn, btnSignOut, btnForgotPassword, btnResetPassword;
+    private boolean firstStart;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -62,6 +66,7 @@ public class LoginActivity extends AppCompatActivity {
         passwordButtons();
 
         toolbarSetup();
+
         mAuth = FirebaseAuth.getInstance();
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -119,7 +124,7 @@ public class LoginActivity extends AppCompatActivity {
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            toastMessage(e.getMessage().toString());
+                            toastMessage(e.getMessage());
                         }
                     });
 
@@ -167,14 +172,14 @@ public class LoginActivity extends AppCompatActivity {
     public void setup() {
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("users");
 
-        mEmail = (EditText) findViewById(R.id.email);
-        mPassword = (EditText) findViewById(R.id.password);
-        mUsername = (EditText) findViewById(R.id.username);
-        mEmailForgotPassword = (EditText) findViewById(R.id.email_forgot_password);
-        btnSignIn = (Button) findViewById(R.id.email_sign_in_button);
-        btnSignOut = (Button) findViewById(R.id.email_sign_out_button);
-        btnForgotPassword = (Button) findViewById(R.id.forgot_password);
-        btnResetPassword = (Button) findViewById(R.id.btn_reset_password);
+        mEmail = findViewById(R.id.email);
+        mPassword = findViewById(R.id.password);
+        mUsername = findViewById(R.id.username);
+        mEmailForgotPassword = findViewById(R.id.email_forgot_password);
+        btnSignIn = findViewById(R.id.email_sign_in_button);
+        btnSignOut = findViewById(R.id.email_sign_out_button);
+        btnForgotPassword = findViewById(R.id.forgot_password);
+        btnResetPassword = findViewById(R.id.btn_reset_password);
 
         mUsername.setHint("Username (what people will see you as when you post)");
 
@@ -183,6 +188,12 @@ public class LoginActivity extends AppCompatActivity {
         btnResetPassword.setVisibility(View.GONE);
 
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
+
+        firstStart = getIntent().getBooleanExtra("First Launch", false);
+
+        if (firstStart){
+            showStartDialog();
+        }
     }
 
     public void passwordButtons() {
@@ -222,11 +233,25 @@ public class LoginActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void toolbarSetup() {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+    }
 
-//        setSupportActionBar(toolbar);
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//            Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-//        }
+    private void showStartDialog(){
+        new AlertDialog.Builder(this)
+                .setTitle("Login to Post")
+                .setMessage("If you are a Club President and want to post updates, please contact bruinsappteam@gmail.com" +
+                        " to apply for an account. In the email, show proof of your club. Then " +
+                        "give your email, username, and password")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create().show();
+
+        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("firstStart", false);
+        editor.apply();
     }
 }

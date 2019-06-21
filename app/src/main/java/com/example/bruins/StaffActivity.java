@@ -1,18 +1,22 @@
 package com.example.bruins;
 
 import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import android.view.MenuInflater;
 import android.view.View;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.StyleRes;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -21,12 +25,14 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.widget.ProgressBar;
+import androidx.appcompat.widget.SearchView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -49,10 +55,13 @@ public class StaffActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private StaffAdapter mAdapter;
 
+
     private ProgressBar mProgressCircle;
 
     private DatabaseReference mDatabaseRef;
     private List<Staff> mStaff;
+
+    private boolean firstStart;
 
     public static final String PATH = "staff";
 
@@ -62,9 +71,20 @@ public class StaffActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_staff);
 
+        firstStart = getIntent().getBooleanExtra("First Launch", false);
+
+        if (firstStart){
+            showStartDialog();
+        }
+
+
+
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
         mRecyclerView = findViewById(R.id.recyclerview);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+
+
 
         mProgressCircle = findViewById(R.id.progress_circle);
 
@@ -80,10 +100,11 @@ public class StaffActivity extends AppCompatActivity {
                     Staff staff = postSnapshot.getValue(Staff.class);
                     mStaff.add(staff);
                 }
+                mAdapter = new StaffAdapter(mStaff);
 
-                mAdapter = new StaffAdapter(StaffActivity.this, mStaff);
-
+                mRecyclerView.setLayoutManager(layoutManager);
                 mRecyclerView.setAdapter(mAdapter);
+
                 mProgressCircle.setVisibility(View.INVISIBLE);
             }
 
@@ -94,5 +115,61 @@ public class StaffActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                mAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.action_search){
+        }else{
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            if(firstStart){
+                intent.putExtra("First Launch", true);
+            }
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showStartDialog(){
+        new AlertDialog.Builder(this)
+                .setTitle("Staff Directory")
+                .setMessage("This page lists all the staff of SCHS. Click on a name to email them.")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create().show();
+
+        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("firstStart", false);
+        editor.apply();
     }
 }

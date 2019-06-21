@@ -1,34 +1,21 @@
 package com.example.bruins;
 
 public class Staff {
+    private String name;
+    private String email;
 
-    private String mName;
-    private String mEmail;
-
-
-    public Staff() {
-        //empty constructor needed
-    }
+    public Staff(){}
 
     public Staff(String name, String email) {
-        mName = name;
-        mEmail = email;
+        this.name = name;
+        this.email = email;
     }
 
     public String getName() {
-        return mName;
-    }
-
-    public void setName(String name) {
-        this.mName = mName;
+        return name;
     }
 
     public String getEmail() {
-        return mEmail;
+        return email;
     }
-
-    public void setEmail(String email) {
-        this.mEmail = email;
-    }
-
 }

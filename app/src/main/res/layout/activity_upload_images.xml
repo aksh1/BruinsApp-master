@@ -21,17 +21,22 @@
 
     <Button
         android:id="@+id/button_choose_image"
+        style="@style/FirebaseUI.Button.AccountChooser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Choose file" />
+        android:layout_alignTop="@+id/image_view"
+        android:layout_marginTop="-61dp"
+        android:text="Choose Image" />
 
     <EditText
         android:id="@+id/edit_text_file_name"
+        style="@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_toEndOf="@+id/button_choose_image"
-        android:hint="Type Description" />
+        android:hint="Type Description"
+        android:textColor="@android:color/black" />
 
 
     <ImageView
@@ -54,11 +59,13 @@
 
     <Button
         android:id="@+id/button_upload"
+        style="@style/FirebaseUI.Button.AccountChooser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="Upload" />
+        android:textAlignment="center"
+        android:text="Post" />
 
 
 

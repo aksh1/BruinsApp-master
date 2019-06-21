@@ -8,19 +8,20 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.github.chrisbanes.photoview.PhotoView;
+
 public class StaffListItem extends AppCompatActivity {
 
     RelativeLayout layout;
     TextView textView;
-    Button button;
+    PhotoView photoView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.staff_list_item);
 
-        layout = (RelativeLayout) findViewById(R.id.constraint);
-        textView = findViewById(R.id.email_txtView);
+
 
 
     }

@@ -1,58 +1,130 @@
 package com.example.bruins;
 
+
+import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.github.chrisbanes.photoview.PhotoView;
-import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
+public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.ExampleViewHolder> implements Filterable {
+    private List<Staff> exampleList;
+    private List<Staff> exampleListFull;
+    private onClickListener mOnClickListener;
+    private Context context;
 
-public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.ViewHolder> {
-    private Context mContext;
-    private List<Staff> mStaff;
+    StaffAdapter(List<Staff> exampleList) {
+        this.exampleList = exampleList;
 
-    public StaffAdapter(Context context, List<Staff> staff) {
-        mContext = context;
-        mStaff = staff;
+
+        exampleListFull = new ArrayList<>(exampleList);
+    }
+
+    @NonNull
+    @Override
+    public ExampleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.staff_list_item,
+                parent, false);
+        return new ExampleViewHolder(v, mOnClickListener);
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.staff_list_item, parent, false);
-        return new ViewHolder(v);
+    public void onBindViewHolder(@NonNull ExampleViewHolder holder, int position) {
+        Staff currentItem = exampleList.get(position);
+        holder.textViewName.setText(currentItem.getName());
+        holder.textViewEmail.setText(currentItem.getEmail());
     }
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        Staff staffCurrent = mStaff.get(position);
-        holder.textViewName.setText(staffCurrent.getName());
-        holder.textViewEmail.setText(staffCurrent.getEmail());
+    public class ExampleViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        TextView textViewName;
+        TextView textViewEmail;
+        onClickListener mOnClickListener;
+
+        @Override
+        public void onClick(View view) {
+            Log.d("STAFF", "onClick: " + getAdapterPosition());
+            mOnClickListener.onClick(getAdapterPosition());
+        }
+
+        ExampleViewHolder(View itemView, onClickListener mOnClickListener) {
+            super(itemView);
+            textViewName = itemView.findViewById(R.id.name_txtView);
+            textViewEmail = itemView.findViewById(R.id.email_txtView);
 
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("CLICK", textViewName.getText().toString());
+                    Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                            "mailto",textViewEmail.getText().toString(), null));
+                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Add A Subject");
+                    emailIntent.putExtra(Intent.EXTRA_TEXT, "");
+                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, textViewEmail.getText().toString());
+                    v.getContext().startActivity(Intent.createChooser(emailIntent, "Send email..."));
+                }
+            });
+        }
     }
+
 
     @Override
     public int getItemCount() {
-        return mStaff.size();
+        return exampleList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textViewEmail;
-        public TextView textViewName;
+    @Override
+    public Filter getFilter() {
+        return exampleFilter;
+    }
 
+    private Filter exampleFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Staff> filteredList = new ArrayList<>();
 
-        public ViewHolder(View itemView) {
-            super(itemView);
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(exampleListFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
 
-            textViewEmail = itemView.findViewById(R.id.email_txtView);
-            textViewName = itemView.findViewById(R.id.name_txtView);
+                for (Staff item : exampleListFull) {
+                    if (item.getName().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
         }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            exampleList.clear();
+            exampleList.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
+
+    public interface onClickListener{
+        void onClick(int position);
     }
 }
