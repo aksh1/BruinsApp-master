@@ -1,30 +1,45 @@
-package com.example.bruins;
+package com.example.bruins.Activities;
+
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
+
 import android.net.Uri;
+
 import android.os.Build;
+
 import android.os.Handler;
+
 import androidx.annotation.NonNull;
-import androidx.core.view.GravityCompat;
-import androidx.appcompat.app.ActionBarDrawerToggle;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.*;
+
 import android.os.Bundle;
+
 import android.util.Log;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.widget.Toolbar;
+
+import com.example.bruins.R;
+import com.example.bruins.Upload;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,38 +50,27 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
+
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Objects;
 
 public class ImagesUploadActivity extends AppCompatActivity {
 
-    private static final int PICK_IMAGE_REQUEST = 1;
-
-    private Button mButtonChooseImage;
-    private Button mButtonUpload;
-    private TextView mTextViewShowUploads;
     private EditText mEditTextFileName;
-    private ImageView mImageView;
     private ProgressBar mProgressBar;
 
     private Uri mImageUri;
 
-
-
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
-    private DatabaseReference mUsernameRef;
-    private DatabaseReference mUserRef;
 
     private StorageTask mUploadTask;
 
-    Upload upload;
-
-    MenuItem menuItem;
+    private Upload upload;
 
     FirebaseAuth mAuth;
 
@@ -74,13 +78,9 @@ public class ImagesUploadActivity extends AppCompatActivity {
 
     String username;
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        menuItem = menu.findItem(R.id.action_settings);
-
+        getMenuInflater().inflate(R.menu.account, menu);
         return true;
     }
 
@@ -94,8 +94,7 @@ public class ImagesUploadActivity extends AppCompatActivity {
 
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
-
-        mUserRef = FirebaseDatabase.getInstance().getReference("users");
+        DatabaseReference mUserRef = FirebaseDatabase.getInstance().getReference("users");
 
 
 
@@ -109,23 +108,19 @@ public class ImagesUploadActivity extends AppCompatActivity {
             email = email.replace(""+c, "");
         }
 
-        mUsernameRef = mUserRef.child(email).child("username");
-
-
+        DatabaseReference mUsernameRef = mUserRef.child(email).child("username");
 
         mUsernameRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 username = dataSnapshot.getValue(String.class);
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
-
-        toastMessage(username);
-
 
         setSupportActionBar(toolbar);
 
@@ -133,15 +128,10 @@ public class ImagesUploadActivity extends AppCompatActivity {
             Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         }
 
-        mButtonChooseImage = findViewById(R.id.button_choose_image);
-        mButtonUpload = findViewById(R.id.button_upload);
+        Button mButtonChooseImage = findViewById(R.id.button_choose_image);
+        Button mButtonUpload = findViewById(R.id.button_upload);
         mEditTextFileName = findViewById(R.id.edit_text_file_name);
-        mImageView = findViewById(R.id.image_view);
         mProgressBar = findViewById(R.id.progress_bar);
-
-
-
-
 
         mButtonChooseImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,62 +150,28 @@ public class ImagesUploadActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                mAuth.signOut();
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
-                return true;
-            default:
-                Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent1);
-                return true;
+        if (item.getItemId() == R.id.action_delete) {
+            mAuth.signOut();
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+            return true;
+        } else if (item.getItemId() == R.id.action_account){
+            startActivity(new Intent(getApplicationContext(), AccountActivity.class).putExtra("Account", email));
+        } else if (item.getItemId() == R.id.action_account_delete){
+            deleteDialog();
+        } else{
+            startActivity(new Intent(this, SplashActivity.class));
         }
-
+        return true;
     }
-
-
     private void openFileChooser() {
-//        Intent intent = new Intent();
-//        intent.setType("image/*");
-//        intent.setAction(Intent.ACTION_GET_CONTENT);
-//        startActivityForResult(intent, PICK_IMAGE_REQUEST);
         CropImage.activity(null).setGuidelines(CropImageView.Guidelines.ON).start(this);
-
     }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
-//                && data != null && data.getData() != null) {
-//            mImageUri = data.getData();
-//
-//            mImageView.setImageUriAsync(mImageUri);
-//
-//            mImageView.setOnCropImageCompleteListener(new CropImageView.OnCropImageCompleteListener() {
-//                @Override
-//                public void onCropImageComplete(CropImageView view, CropImageView.CropResult result) {
-//
-//                    mImageView.getCroppedImageAsync();
-//                }
-//            });
-//
-//
-////            Picasso.get().load(mImageUri).into(mImageView);
-//        }
-//    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        // handle result of CropImageActivity
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
@@ -229,13 +185,9 @@ public class ImagesUploadActivity extends AppCompatActivity {
             }
         }
     }
-
-
     private void uploadFile() {
         if (mImageUri != null) {
             final StorageReference fileReference = mStorageRef.child(mEditTextFileName.getText().toString());
-
-
             mUploadTask = fileReference.putFile(mImageUri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -247,22 +199,20 @@ public class ImagesUploadActivity extends AppCompatActivity {
                                     mProgressBar.setProgress(0);
                                 }
                             }, 500);
-
-
-                            mStorageRef.child(mEditTextFileName.getText().toString().trim()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            mStorageRef.child(mEditTextFileName.getText().toString().trim()).
+                                    getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
-                                    // Got the download URL for 'users/me/profile.png'
-
-
-
-                                    upload = new Upload(mEditTextFileName.getText().toString().trim(), uri.toString(), username);
+                                    Calendar calendar = Calendar.getInstance();
+                                    SimpleDateFormat mdformat = new SimpleDateFormat("MM.dd.yyyy");
+                                    String strDate = mdformat.format(calendar.getTime());
+                                    upload = new Upload(mEditTextFileName.getText().toString().trim(), uri.toString(), username, strDate);
                                     Log.d("URLLINK", uri.toString());
                                     String uploadId = mDatabaseRef.push().getKey();
                                     mDatabaseRef.child(uploadId).setValue(upload);
                                     Toast.makeText(ImagesUploadActivity.this, "Upload successful", Toast.LENGTH_LONG).show();
                                     mEditTextFileName.setText("");
-                                    Intent intent = new Intent(ImagesUploadActivity.this, MainActivity.class);
+                                    Intent intent = new Intent(ImagesUploadActivity.this, SplashActivity.class);
                                     startActivity(intent);
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
@@ -271,9 +221,6 @@ public class ImagesUploadActivity extends AppCompatActivity {
                                     Toast.makeText(ImagesUploadActivity.this, exception.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
-
-
-
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -293,14 +240,59 @@ public class ImagesUploadActivity extends AppCompatActivity {
             Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
         }
     }
-
-    private void openImagesActivity() {
-//        Intent intent = new Intent(this, ImagesActivity.class);
-//        startActivity(intent);
+    public void toastMessage(String message, Context context) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
-    private void toastMessage(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    private void deleteDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Delete Account")
+                .setMessage("Are you sure you want to delete your Bruins account? You won't be able to post updates.")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteAccount();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create().show();
     }
 
-}
+    private void deleteAccount(){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
+            databaseReference.child(email).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+
+            final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+            user.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    View parentView = findViewById(R.id.content);
+                    Snackbar.make(parentView, "Account Successfully Deleted", Snackbar.LENGTH_SHORT)
+                            .setCallback(new Snackbar.Callback() {
+                                @Override
+                                public void onDismissed(Snackbar snackbar, int event) {
+                                    super.onDismissed(snackbar, event);
+
+                                    startActivity(new Intent(getApplicationContext(), SplashActivity.class));
+                                }
+                            }).show();
+                }
+            });
+        }
+    }

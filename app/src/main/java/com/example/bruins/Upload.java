@@ -4,22 +4,25 @@ public class Upload {
     private String mName;
     private String mImageUrl;
     private String mUsername;
+    private String mDate;
 
     public Upload() {
         //empty constructor needed
     }
 
-    public Upload(String name, String imageUrl, String username) {
+    public Upload(String name, String imageUrl, String username, String dateFormat) {
         if (name.trim().equals("")) {
             name = null;
         }
-
         mName = name;
         mImageUrl = imageUrl;
         mUsername = username;
+        mDate = dateFormat;
     }
 
+    public String getDate() { return mDate; }
 
+    public void setDate(String mDate) { this.mDate = mDate; }
 
     public String getmUsername() {
         return mUsername;

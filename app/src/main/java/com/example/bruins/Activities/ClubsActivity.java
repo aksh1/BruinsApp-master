@@ -1,4 +1,4 @@
-package com.example.bruins;
+package com.example.bruins.Activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -12,6 +12,8 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
+
+import com.example.bruins.R;
 
 import java.util.Objects;
 

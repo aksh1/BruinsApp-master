@@ -1,16 +1,21 @@
-package com.example.bruins;
+package com.example.bruins.Activities;
 
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -21,33 +26,35 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.bruins.ImageAdapter;
+import com.example.bruins.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import static com.example.bruins.Activities.SplashActivity.uploads;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView mRecyclerView;
     private ImageAdapter mAdapter;
+    private SwipeRefreshLayout swipeView;
 
     private ProgressBar mProgressCircle;
 
-    private List<Upload> mUploads;
     boolean firstStart;
     boolean firstStartFromActivity = false;
+    public static String version;
 
-    DrawerLayout drawer;
+    private boolean refreshToggle;
+
+    private Handler handler;
+
+
+    private DrawerLayout drawer;
 
     public static final String PATH = "uploads";
 
@@ -57,28 +64,27 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
         firstStartFromActivity = getIntent().getBooleanExtra("First Launch", false);
-
         SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
         firstStart = prefs.getBoolean("firstStart", true);
-
         if (firstStartFromActivity) {
             firstStart = true;
         }
-
         if (firstStart) {
             showStartDialog();
         }
-
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                version();
+                return true;
+            }
+        });
 
+        toolbar.inflateMenu(R.menu.main);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setReverseLayout(true);
-        linearLayoutManager.setStackFromEnd(true);
-
 
         mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(linearLayoutManager);
@@ -86,42 +92,35 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mProgressCircle = findViewById(R.id.progress_circle);
+        swipeView = findViewById(R.id.swipe);
 
-        mUploads = new ArrayList<>();
+        swipeView.setOnRefreshListener(this);
+
+        handler = new Handler() {
+            public void handleMessage(android.os.Message msg) {
 
 
-        DatabaseReference mDatabaseRef = FirebaseDatabase.getInstance().getReference(PATH);
+                swipeView.postDelayed(new Runnable() {
 
-
-        mDatabaseRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Upload upload = postSnapshot.getValue(Upload.class);
-                    mUploads.add(upload);
-                }
-
-                mAdapter = new ImageAdapter(MainActivity.this, mUploads);
-
-                Collections.reverse(mUploads);
-
-                mRecyclerView.setAdapter(mAdapter);
-                mProgressCircle.setVisibility(View.INVISIBLE);
+                    @Override
+                    public void run() {
+                        startActivity(new Intent(getApplicationContext(), SplashActivity.class));
+                    }
+                }, 500);
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(MainActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                mProgressCircle.setVisibility(View.INVISIBLE);
-            }
-        });
+            ;
+        };
 
+
+        mAdapter = new ImageAdapter(MainActivity.this, uploads);
+        mRecyclerView.setAdapter(mAdapter);
+        mProgressCircle.setVisibility(View.INVISIBLE);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Intent intent = new Intent(MainActivity.this, StaffActivity.class);
                 if (firstStart || firstStartFromActivity) intent.putExtra("First Launch", true);
                 startActivity(intent);
@@ -151,20 +150,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) return true;
+        version();
 
         return super.onOptionsItemSelected(item);
     }
@@ -192,7 +184,7 @@ public class MainActivity extends AppCompatActivity
             mProgressCircle.setVisibility(View.GONE);
         } else if (id == R.id.nav_post) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            if(firstStartFromActivity || firstStart) intent.putExtra("First Launch", true);
+            if (firstStartFromActivity || firstStart) intent.putExtra("First Launch", true);
             startActivity(intent);
         }
 
@@ -204,6 +196,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
     }
 
     private void showStartDialog() {
@@ -227,5 +224,38 @@ public class MainActivity extends AppCompatActivity
             editor.putBoolean("firstStart", false);
             editor.apply();
         }
+    }
+
+    private void version() {
+        try {
+            PackageInfo pInfo = getApplicationContext().getPackageManager().getPackageInfo(getPackageName(), 0);
+            version = pInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        new AlertDialog.Builder(this)
+                .setTitle("Version")
+                .setMessage(String.valueOf(version))
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create().show();
+        Log.d("DIALOG", "SHOWED");
+    }
+
+    @Override
+    public void onRefresh() {
+
+        swipeView.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                swipeView.setRefreshing(true);
+                handler.sendEmptyMessage(0);
+            }
+        }, 1000);
     }
 }

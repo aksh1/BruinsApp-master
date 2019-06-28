@@ -1,16 +1,10 @@
-package com.example.bruins;
+package com.example.bruins.Activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +12,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.bruins.R;
+import com.example.bruins.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -44,15 +45,17 @@ public class LoginActivity extends AppCompatActivity {
     DatabaseReference rootRef;
     boolean recentlyLoggedIn = false;
     User databaseUser;
-    String usernameString;
     private EditText mEmail, mPassword, mUsername, mEmailForgotPassword;
     private Button btnSignIn, btnSignOut, btnForgotPassword, btnResetPassword;
     private boolean firstStart;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent1);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        if(firstStart){
+            intent.putExtra("First Launch", true);
+        }
+        startActivity(intent);
         return true;
     }
 
@@ -60,6 +63,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+
 
         setup();
 
@@ -77,10 +82,9 @@ public class LoginActivity extends AppCompatActivity {
                     rootRef = FirebaseDatabase.getInstance().getReference("users");
                     rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onDataChange(DataSnapshot snapshot) {
-                            if (snapshot.hasChild(mUsername.getText().toString())) {
-                            } else {
-                                databaseUser = new User(mEmail.getText().toString(), mUsername.getText().toString(), mPassword.getText().toString());
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (!snapshot.hasChild(mUsername.getText().toString())) {
+                                databaseUser = new User(mEmail.getText().toString(), mUsername.getText().toString(), mPassword.getText().toString(),"");
                             }
                         }
 
@@ -158,13 +162,6 @@ public class LoginActivity extends AppCompatActivity {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
-
-
-    /**
-     * customizable toast
-     *
-     * @param message
-     */
     private void toastMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }

@@ -1,19 +1,16 @@
-package com.example.bruins;
+package com.example.bruins.Activities;
 
-import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.MenuItem;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.bruins.Activities.MainActivity;
+import com.example.bruins.R;
 
 import java.util.Objects;
 
