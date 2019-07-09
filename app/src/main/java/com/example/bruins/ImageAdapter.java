@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.chrisbanes.photoview.PhotoView;
 import com.squareup.picasso.Picasso;
-import static com.example.bruins.Activities.SplashActivity.uploads;
 
 import java.util.List;
 
@@ -18,8 +17,6 @@ import java.util.List;
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
     private Context mContext;
     private List<Upload> mUploads;
-
-
 
     public ImageAdapter(Context context, List<Upload> uploads) {
         mContext = context;
@@ -33,7 +30,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     }
 
     @Override
-    public void onBindViewHolder(ImageViewHolder holder, int position){
+    public void onBindViewHolder(ImageViewHolder holder, int position)                                                                                                    {
         Upload uploadCurrent = mUploads.get(position);
         holder.textViewName.setText(uploadCurrent.getName());
         holder.textViewUsername.setText(uploadCurrent.getmUsername());

@@ -63,6 +63,8 @@ public class ImagesUploadActivity extends AppCompatActivity {
     private EditText mEditTextFileName;
     private ProgressBar mProgressBar;
 
+    public static final String defaultPic = "https://firebasestorage.googleapis.com/v0/b/bruins-app.appspot.com/o/profilepic.jpg?alt=media&token=3eb35e63-d31c-44b0-b009-14ed0c1f5b57";
+
     private Uri mImageUri;
 
     private StorageReference mStorageRef;
@@ -122,6 +124,26 @@ public class ImagesUploadActivity extends AppCompatActivity {
             }
         });
 
+//        DatabaseReference profilePicRef = mUserRef.child(email).child("profilePic");
+//
+//        profilePicRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if(dataSnapshot.getValue().toString().equals(defaultPic)){
+//                    addProfilePicPrompt();
+//                    toastMessage("You need a profile pic", getApplicationContext());
+//                } else{
+//                    toastMessage("You don't need a profile pic", getApplicationContext());
+//                }
+//                Log.d("PROFILEPIC", dataSnapshot.getValue().toString());
+//            }
+
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+
         setSupportActionBar(toolbar);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -178,7 +200,7 @@ public class ImagesUploadActivity extends AppCompatActivity {
                 mImageUri = result.getUri();
                 ((ImageView) findViewById(R.id.image_view)).setImageURI(mImageUri);
                 Toast.makeText(
-                        this, "Cropping successful, Sample: " + result.getSampleSize(), Toast.LENGTH_LONG)
+                        this, "Cropping successful", Toast.LENGTH_LONG)
                         .show();
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Toast.makeText(this, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show();
@@ -294,5 +316,29 @@ public class ImagesUploadActivity extends AppCompatActivity {
                             }).show();
                 }
             });
+        }
+
+        private void addProfilePicPrompt(){
+            new AlertDialog.Builder(this)
+                    .setTitle("You don't have a profile picture yet!")
+                    .setMessage("Please add a profile pic to your account. It will be shown when" +
+                            "you post.")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            uploadProfilePic();
+                        }
+                    })
+                    .setNegativeButton("No thanks", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create().show();
+        }
+
+        private void uploadProfilePic(){
+            startActivity(new Intent(this, ProfilePictureActivity.class).putExtra("Child", email));
         }
     }

@@ -45,6 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/progress_bar"
+        android:maxHeight="100dp"
         android:layout_below="@id/edit_text_file_name"
         android:layout_marginTop="16dp"
         />

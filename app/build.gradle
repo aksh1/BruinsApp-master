@@ -13,7 +13,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
-        versionName "0.1 (Beta)"
+        versionName "0.2-2 (Beta)"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -47,12 +47,15 @@ dependencies {
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
     implementation 'de.hdodenhof:circleimageview:3.0.0'
+    implementation 'com.google.zxing:zxing-parent:3.4.0'
+    implementation 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
 
 
 
 // this dependency is not required if you are already using your own
 // slf4j implementation
     implementation 'org.slf4j:slf4j-nop:1.7.25'
+
 
 }
 

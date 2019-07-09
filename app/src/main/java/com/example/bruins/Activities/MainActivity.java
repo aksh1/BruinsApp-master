@@ -1,11 +1,14 @@
 package com.example.bruins.Activities;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.nfc.tech.NfcBarcode;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -33,8 +35,10 @@ import com.example.bruins.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.zxing.integration.android.IntentIntegrator;
 
 import static com.example.bruins.Activities.SplashActivity.uploads;
+import static com.example.bruins.Activities.SplashActivity.PATH;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
@@ -49,16 +53,11 @@ public class MainActivity extends AppCompatActivity
     boolean firstStartFromActivity = false;
     public static String version;
 
-    private boolean refreshToggle;
-
     private Handler handler;
-
 
     private DrawerLayout drawer;
 
-    public static final String PATH = "uploads";
-
-
+    @SuppressLint("HandlerLeak")
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +72,8 @@ public class MainActivity extends AppCompatActivity
         if (firstStart) {
             showStartDialog();
         }
+
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -89,7 +90,6 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mProgressCircle = findViewById(R.id.progress_circle);
         swipeView = findViewById(R.id.swipe);
@@ -98,8 +98,6 @@ public class MainActivity extends AppCompatActivity
 
         handler = new Handler() {
             public void handleMessage(android.os.Message msg) {
-
-
                 swipeView.postDelayed(new Runnable() {
 
                     @Override
@@ -108,8 +106,6 @@ public class MainActivity extends AppCompatActivity
                     }
                 }, 500);
             }
-
-            ;
         };
 
 
@@ -154,12 +150,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        version();
-
-        return super.onOptionsItemSelected(item);
-    }
 
 
     @Override
@@ -227,28 +217,31 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void version() {
-        try {
-            PackageInfo pInfo = getApplicationContext().getPackageManager().getPackageInfo(getPackageName(), 0);
-            version = pInfo.versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        new AlertDialog.Builder(this)
-                .setTitle("Version")
-                .setMessage(String.valueOf(version))
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .create().show();
-        Log.d("DIALOG", "SHOWED");
+//        try {
+//            PackageInfo pInfo = getApplicationContext().getPackageManager().getPackageInfo(getPackageName(), 0);
+//            version = pInfo.versionName;
+//        } catch (PackageManager.NameNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        new AlertDialog.Builder(this)
+//                .setTitle("Version")
+//                .setMessage(String.valueOf(version))
+//                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.dismiss();
+//                    }
+//                })
+//                .create().show();
+//        Log.d("DIALOG", "SHOWED");
+        IntentIntegrator intentIntegrator = new IntentIntegrator(this);
+        intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+        intentIntegrator.setPrompt("Generate");
+        intentIntegrator.initiateScan();
     }
 
     @Override
     public void onRefresh() {
-
         swipeView.postDelayed(new Runnable() {
 
             @Override

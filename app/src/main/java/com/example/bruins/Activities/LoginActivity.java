@@ -83,8 +83,15 @@ public class LoginActivity extends AppCompatActivity {
                     rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (!snapshot.hasChild(mUsername.getText().toString())) {
-                                databaseUser = new User(mEmail.getText().toString(), mUsername.getText().toString(), mPassword.getText().toString(),"");
+                            String email = mEmail.getText().toString();
+                            String regx = "@.";
+                            char[] ca = regx.toCharArray();
+                            for (char c : ca) {
+                                email = email.replace(""+c, "");
+                            }
+                            if (!snapshot.hasChild(email)) {
+                                //If it is the first time the user is logging in ever so it has no profile pic
+                                databaseUser = new User(email, mUsername.getText().toString(), mPassword.getText().toString(),"https://firebasestorage.googleapis.com/v0/b/bruins-app.appspot.com/o/profilepic.jpg?alt=media&token=3eb35e63-d31c-44b0-b009-14ed0c1f5b57");
                             }
                         }
 

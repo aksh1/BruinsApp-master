@@ -24,7 +24,7 @@
                     android:layout_width="33dp"
                     android:layout_height="33dp"
                     android:layout_centerVertical="true"
-                    android:src="@android:drawable/sym_def_app_icon"
+                    android:src="@drawable/pic1"
                     app:civ_border_color="@android:color/darker_gray"
                     app:civ_border_width="1dp" />
 
@@ -46,9 +46,10 @@
 
         <com.github.chrisbanes.photoview.PhotoView
             android:id="@+id/image_view_upload"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="fitXY"
+            android:scaleType="fitCenter"
+            android:maxHeight="400dp"
             android:adjustViewBounds="true"
 
              />

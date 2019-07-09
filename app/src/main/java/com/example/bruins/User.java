@@ -31,11 +31,6 @@ public class User {
         mPassword = password;
         mProfilePic = profilePic;
 
-        String regx = "@.";
-        char[] ca = regx.toCharArray();
-        for (char c : ca) {
-            email = email.replace(""+c, "");
-        }
 
         mDatabaseReference = mDatabase.child(email);
         mDatabaseReference.child("email").setValue(mEmail);
