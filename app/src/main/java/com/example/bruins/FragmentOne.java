@@ -1,13 +1,15 @@
 package com.example.bruins;
 
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 
-public class FragmentOne extends Fragment{
+public class FragmentOne extends Fragment {
 
     public FragmentOne() {
         // Required empty public constructor

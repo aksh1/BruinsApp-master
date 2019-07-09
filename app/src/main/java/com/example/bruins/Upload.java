@@ -20,9 +20,13 @@ public class Upload {
         mDate = dateFormat;
     }
 
-    public String getDate() { return mDate; }
+    public String getDate() {
+        return mDate;
+    }
 
-    public void setDate(String mDate) { this.mDate = mDate; }
+    public void setDate(String mDate) {
+        this.mDate = mDate;
+    }
 
     public String getmUsername() {
         return mUsername;

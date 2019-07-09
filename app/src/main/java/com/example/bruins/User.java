@@ -21,7 +21,7 @@ public class User {
     private DatabaseReference mDatabaseReference;
     private StorageReference storageReference;
 
-    public User(){
+    public User() {
 
     }
 
@@ -40,7 +40,7 @@ public class User {
 
         storageReference = FirebaseStorage.getInstance().getReference();
 
-        if (profilePic.equals("")){
+        if (profilePic.equals("")) {
             storageReference.child("profilepic.jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
@@ -77,7 +77,11 @@ public class User {
         mUsername = name;
     }
 
-    public String getProfilePic() { return mProfilePic; }
+    public String getProfilePic() {
+        return mProfilePic;
+    }
 
-    public void setProfilePic(String mProfilePic) { this.mProfilePic = mProfilePic; }
+    public void setProfilePic(String mProfilePic) {
+        this.mProfilePic = mProfilePic;
+    }
 }

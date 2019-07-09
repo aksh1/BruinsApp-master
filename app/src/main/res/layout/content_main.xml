@@ -76,8 +76,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
         android:background="@color/colorAccent"
-        android:src="@android:drawable/ic_dialog_email"
-        />
+        android:src="@android:drawable/ic_dialog_email" />
 
 
 </RelativeLayout>

@@ -11,16 +11,23 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.bruins.Activities.MainActivity;
 import com.example.bruins.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 import java.util.Objects;
 
 
 public class MapActivity extends AppCompatActivity {
+
+    private AdView mAdView;
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
 

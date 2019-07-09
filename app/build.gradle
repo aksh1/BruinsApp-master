@@ -1,10 +1,9 @@
 apply plugin: 'com.android.application'
 
 
-
 android {
     compileSdkVersion 28
-    dataBinding{
+    dataBinding {
         enabled = true
     }
 
@@ -49,12 +48,7 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.0.0'
     implementation 'com.google.zxing:zxing-parent:3.4.0'
     implementation 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
-
-
-
-// this dependency is not required if you are already using your own
-// slf4j implementation
-    implementation 'org.slf4j:slf4j-nop:1.7.25'
+    implementation 'com.google.firebase:firebase-ads:18.0.0'
 
 
 }

@@ -4,6 +4,7 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -33,6 +34,7 @@ public class FragmentTwo extends Fragment {
     public FragmentTwo() {
         // Required empty public constructor
     }
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,13 +43,10 @@ public class FragmentTwo extends Fragment {
     }
 
 
-
-
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
 
 
         return inflater.inflate(R.layout.fragment_two, container, false);
@@ -59,9 +58,7 @@ public class FragmentTwo extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
 
-
-
     }
 
-    }
+}
 

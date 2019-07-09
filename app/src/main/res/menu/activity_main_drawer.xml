@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view"
-    >
+    tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single" android:id="@+id/group_top">
+    <group
+        android:checkableBehavior="single"
+        android:id="@+id/group_top">
         <item
             android:id="@+id/nav_home"
             android:title="Home" />
@@ -26,10 +27,12 @@
             android:title="Student Council" />
     </group>
 
-    <group android:checkableBehavior="none" android:id="@+id/group_bottom">
+    <group
+        android:checkableBehavior="none"
+        android:id="@+id/group_bottom">
         <item
             android:id="@+id/nav_post"
-            android:title="Post"/>
+            android:title="Post" />
     </group>
 
 </menu>

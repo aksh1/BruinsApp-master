@@ -4,7 +4,8 @@ public class Staff {
     private String name;
     private String email;
 
-    public Staff(){}
+    public Staff() {
+    }
 
     public Staff(String name, String email) {
         this.name = name;
