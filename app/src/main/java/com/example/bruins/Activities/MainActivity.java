@@ -2,13 +2,9 @@ package com.example.bruins.Activities;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.nfc.tech.NfcBarcode;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,16 +27,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.bruins.R;
+import com.example.bruins.Upload;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.zxing.integration.android.IntentIntegrator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.example.bruins.Activities.SplashActivity.uploads;
-import static com.example.bruins.Activities.SplashActivity.PATH;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
@@ -61,7 +59,9 @@ public class MainActivity extends AppCompatActivity
 
     private AdView mAdView;
 
-    private EndlessRecyclerViewScrollListener scrollListener;
+    private int i = 2;
+
+    private List<Upload> mUploads = new ArrayList<>();
 
     @SuppressLint("HandlerLeak")
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -123,10 +123,35 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
+        mUploads.add(uploads.get(0));
+        mUploads.add(uploads.get(1));
 
-        mAdapter = new ImageAdapter(MainActivity.this, uploads);
+
+
+        mAdapter = new ImageAdapter(MainActivity.this, mUploads);
         mRecyclerView.setAdapter(mAdapter);
         mProgressCircle.setVisibility(View.INVISIBLE);
+
+//        mRecyclerView.setOnScrollListener(new EndlessRecyclerViewScrollListener() {
+//            @Override
+//            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+//                for (int i = 2; i <= 30; i++) {
+//                    Upload upload = uploads.get(i);
+//                    mUploads.add(upload);
+//                }
+//                mAdapter.notifyDataSetChanged();
+//            }
+//        });
+
+       mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+           @Override
+           public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+               super.onScrollStateChanged(recyclerView, newState);
+               Log.d("SCROLLING", "TRUE");
+               addDataToList();
+           }
+       }) ;
+
 
 
         drawer = findViewById(R.id.drawer_layout);
@@ -137,6 +162,22 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    public void addDataToList(){
+
+        Integer length = uploads.size();
+
+        Log.d("SIZE", String.valueOf(uploads.size()));
+        Log.d("I", String.valueOf(i));
+
+        if (i < length) {
+            mUploads.add(uploads.get(i));
+            mAdapter.notifyDataSetChanged();
+            i = i +1;
+        }
+
+
     }
 
     @Override

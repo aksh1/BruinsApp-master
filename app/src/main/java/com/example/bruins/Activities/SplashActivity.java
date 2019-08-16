@@ -41,6 +41,8 @@ public class SplashActivity extends AppCompatActivity {
                 }
                 mDatabaseRef.removeEventListener(this);
 
+                Collections.reverse(uploads);
+
                 //Go to the home page
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
