@@ -27,8 +27,30 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        //Collect the data on the first loading screen
+        uploads = new ArrayList<>();
+        final DatabaseReference mDatabaseRef = FirebaseDatabase.getInstance().getReference(PATH);
+        mDatabaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
+                    Upload upload = postSnapshot.getValue(Upload.class);
+                    uploads.add(upload);
+
+                }
+                mDatabaseRef.removeEventListener(this);
+
+                //Go to the home page
+
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 }

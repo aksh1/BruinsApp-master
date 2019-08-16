@@ -34,6 +34,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 
+import static com.example.bruins.Activities.ImagesUploadActivity.defaultPic;
+
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
@@ -64,8 +66,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
-
         setup();
 
         passwordButtons();
@@ -84,14 +84,16 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             String email = mEmail.getText().toString();
-                            String regx = "@.";
+                            String regx = ".";
                             char[] ca = regx.toCharArray();
                             for (char c : ca) {
                                 email = email.replace(""+c, "");
                             }
                             if (!snapshot.hasChild(email)) {
                                 //If it is the first time the user is logging in ever so it has no profile pic
-                                databaseUser = new User(email, mUsername.getText().toString(), mPassword.getText().toString(),"https://firebasestorage.googleapis.com/v0/b/bruins-app.appspot.com/o/profilepic.jpg?alt=media&token=3eb35e63-d31c-44b0-b009-14ed0c1f5b57");
+                                Log.d("FIRSTTIMELOGIN", "TRUE");
+                                databaseUser = new User(email, mUsername.getText().toString(), mPassword.getText().toString(),
+                                        defaultPic);
                             }
                         }
 

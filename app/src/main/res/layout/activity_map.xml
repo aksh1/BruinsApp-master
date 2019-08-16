@@ -8,14 +8,12 @@
 
     android:layout_height="match_parent">
 
-    <include layout="@layout/toolbar" />
-
 
     <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/imageView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/bruins" />
+        app:srcCompat="@drawable/map" />
 
 
 </LinearLayout>

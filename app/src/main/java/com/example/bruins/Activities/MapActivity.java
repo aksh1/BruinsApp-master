@@ -20,22 +20,13 @@ import java.util.Objects;
 
 public class MapActivity extends AppCompatActivity {
 
-    private AdView mAdView;
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-
-        toolbar.setTitle("Map");
-
-        this.setSupportActionBar(toolbar);
-
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 

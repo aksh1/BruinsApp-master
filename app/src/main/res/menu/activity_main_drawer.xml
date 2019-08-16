@@ -25,6 +25,9 @@
         <item
             android:id="@+id/nav_council"
             android:title="Student Council" />
+        <item
+            android:id="@+id/nav_staffDirectory"
+            android:title="Staff Directory" />
     </group>
 
     <group

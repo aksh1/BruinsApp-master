@@ -63,7 +63,7 @@ public class ImagesUploadActivity extends AppCompatActivity {
     private EditText mEditTextFileName;
     private ProgressBar mProgressBar;
 
-    public static final String defaultPic = "https://firebasestorage.googleapis.com/v0/b/bruins-app.appspot.com/o/profilepic.jpg?alt=media&token=3eb35e63-d31c-44b0-b009-14ed0c1f5b57";
+    public static final String defaultPic = "https://firebasestorage.googleapis.com/v0/b/bruins-app.appspot.com/o/profilepic.jpg?alt=media&token=b8f7ede6-72fe-466d-a2b9-e6d0cce8af7f";
 
     private Uri mImageUri;
 
@@ -74,11 +74,13 @@ public class ImagesUploadActivity extends AppCompatActivity {
 
     private Upload upload;
 
-    FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
 
-    String email;
+    private String email;
 
-    String username;
+    private String username;
+
+    private String profilePic;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -98,16 +100,14 @@ public class ImagesUploadActivity extends AppCompatActivity {
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
         DatabaseReference mUserRef = FirebaseDatabase.getInstance().getReference("users");
 
-
-
         mAuth = FirebaseAuth.getInstance();
 
         email = getIntent().getStringExtra("Email");
 
-        String regx = "@.";
+        String regx = ".";
         char[] ca = regx.toCharArray();
         for (char c : ca) {
-            email = email.replace(""+c, "");
+            email = email.replace("" + c, "");
         }
 
         DatabaseReference mUsernameRef = mUserRef.child(email).child("username");
@@ -124,25 +124,24 @@ public class ImagesUploadActivity extends AppCompatActivity {
             }
         });
 
-//        DatabaseReference profilePicRef = mUserRef.child(email).child("profilePic");
-//
-//        profilePicRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if(dataSnapshot.getValue().toString().equals(defaultPic)){
-//                    addProfilePicPrompt();
-//                    toastMessage("You need a profile pic", getApplicationContext());
-//                } else{
-//                    toastMessage("You don't need a profile pic", getApplicationContext());
-//                }
-//                Log.d("PROFILEPIC", dataSnapshot.getValue().toString());
-//            }
+        DatabaseReference profilePicRef = mUserRef.child(email).child("profilePic");
 
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
+        profilePicRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                profilePic = dataSnapshot.getValue().toString();
+                if (dataSnapshot.getValue().toString() == null) {
+                    mAuth.signOut();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        addProfilePicPrompt();
 
         setSupportActionBar(toolbar);
 
@@ -173,6 +172,7 @@ public class ImagesUploadActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_delete) {
@@ -180,18 +180,20 @@ public class ImagesUploadActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
             return true;
-        } else if (item.getItemId() == R.id.action_account){
+        } else if (item.getItemId() == R.id.action_account) {
             startActivity(new Intent(getApplicationContext(), AccountActivity.class).putExtra("Account", email));
-        } else if (item.getItemId() == R.id.action_account_delete){
+        } else if (item.getItemId() == R.id.action_account_delete) {
             deleteDialog();
-        } else{
+        } else {
             startActivity(new Intent(this, SplashActivity.class));
         }
         return true;
     }
+
     private void openFileChooser() {
         CropImage.activity(null).setGuidelines(CropImageView.Guidelines.ON).start(this);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
@@ -207,6 +209,7 @@ public class ImagesUploadActivity extends AppCompatActivity {
             }
         }
     }
+
     private void uploadFile() {
         if (mImageUri != null) {
             final StorageReference fileReference = mStorageRef.child(mEditTextFileName.getText().toString());
@@ -228,10 +231,12 @@ public class ImagesUploadActivity extends AppCompatActivity {
                                     Calendar calendar = Calendar.getInstance();
                                     SimpleDateFormat mdformat = new SimpleDateFormat("MM.dd.yyyy");
                                     String strDate = mdformat.format(calendar.getTime());
-                                    upload = new Upload(mEditTextFileName.getText().toString().trim(), uri.toString(), username, strDate);
+                                    upload = new Upload(mEditTextFileName.getText().toString().trim(), uri.toString(), username, strDate, profilePic);
                                     Log.d("URLLINK", uri.toString());
-                                    String uploadId = mDatabaseRef.push().getKey();
-                                    mDatabaseRef.child(uploadId).setValue(upload);
+                                    String userUID = mAuth.getUid();
+                                    SimpleDateFormat postFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                                    String postDate = postFormat.format(calendar.getTime());
+                                    mDatabaseRef.child(userUID + " on " + postDate).setValue(upload);
                                     Toast.makeText(ImagesUploadActivity.this, "Upload successful", Toast.LENGTH_LONG).show();
                                     mEditTextFileName.setText("");
                                     Intent intent = new Intent(ImagesUploadActivity.this, SplashActivity.class);
@@ -262,6 +267,7 @@ public class ImagesUploadActivity extends AppCompatActivity {
             Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
         }
     }
+
     public void toastMessage(String message, Context context) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
@@ -285,60 +291,54 @@ public class ImagesUploadActivity extends AppCompatActivity {
                 .create().show();
     }
 
-    private void deleteAccount(){
+    private void deleteAccount() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
-            databaseReference.child(email).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
+        databaseReference.child(email).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
 
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
 
-            final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-            user.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    View parentView = findViewById(R.id.content);
-                    Snackbar.make(parentView, "Account Successfully Deleted", Snackbar.LENGTH_SHORT)
-                            .setCallback(new Snackbar.Callback() {
-                                @Override
-                                public void onDismissed(Snackbar snackbar, int event) {
-                                    super.onDismissed(snackbar, event);
+        user.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                View parentView = findViewById(R.id.content);
+                Snackbar.make(parentView, "Account Successfully Deleted", Snackbar.LENGTH_SHORT)
+                        .setCallback(new Snackbar.Callback() {
+                            @Override
+                            public void onDismissed(Snackbar snackbar, int event) {
+                                super.onDismissed(snackbar, event);
 
-                                    startActivity(new Intent(getApplicationContext(), SplashActivity.class));
-                                }
-                            }).show();
-                }
-            });
-        }
-
-        private void addProfilePicPrompt(){
-            new AlertDialog.Builder(this)
-                    .setTitle("You don't have a profile picture yet!")
-                    .setMessage("Please add a profile pic to your account. It will be shown when" +
-                            "you post.")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            uploadProfilePic();
-                        }
-                    })
-                    .setNegativeButton("No thanks", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .create().show();
-        }
-
-        private void uploadProfilePic(){
-            startActivity(new Intent(this, ProfilePictureActivity.class).putExtra("Child", email));
-        }
+                                startActivity(new Intent(getApplicationContext(), SplashActivity.class));
+                            }
+                        }).show();
+            }
+        });
     }
+
+    private void addProfilePicPrompt() {
+        new AlertDialog.Builder(this)
+                .setTitle("You don't have a profile picture yet!")
+                .setMessage("Please add a profile pic to your account. It will be shown when" +
+                        "you post.")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        uploadProfilePic();
+                    }
+                })
+                .create().show();
+    }
+
+    private void uploadProfilePic() {
+        startActivity(new Intent(this, ProfilePictureActivity.class).putExtra("Child", email));
+    }
+}

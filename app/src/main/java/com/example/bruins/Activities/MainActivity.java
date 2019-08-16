@@ -30,23 +30,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.bruins.ImageAdapter;
 import com.example.bruins.R;
-import com.example.bruins.Upload;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.integration.android.IntentIntegrator;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import static com.example.bruins.Activities.SplashActivity.uploads;
 import static com.example.bruins.Activities.SplashActivity.PATH;
@@ -68,7 +59,9 @@ public class MainActivity extends AppCompatActivity
 
     private DrawerLayout drawer;
 
-    private List<Upload> mUploads;
+    private AdView mAdView;
+
+    private EndlessRecyclerViewScrollListener scrollListener;
 
     @SuppressLint("HandlerLeak")
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -76,12 +69,6 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        MobileAds.initialize(this, "ca-app-pub-2732648649535752~9188575873");
-
-
-
-        //First start stuff
         firstStartFromActivity = getIntent().getBooleanExtra("First Launch", false);
         SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
         firstStart = prefs.getBoolean("firstStart", true);
@@ -92,7 +79,13 @@ public class MainActivity extends AppCompatActivity
             showStartDialog();
         }
 
-        //Toolbar Stuff
+        MobileAds.initialize(this,
+                "ca-app-pub-3543335372228589~7456143063");
+
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -101,15 +94,18 @@ public class MainActivity extends AppCompatActivity
                 return true;
             }
         });
-        toolbar.inflateMenu(R.menu.main);
 
-        //Recycler View Stuff
+        toolbar.inflateMenu(R.menu.main);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
         mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setItemViewCacheSize(20);
+        mRecyclerView.setDrawingCacheEnabled(true);
+        mRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
+
         mProgressCircle = findViewById(R.id.progress_circle);
         swipeView = findViewById(R.id.swipe);
 
@@ -127,45 +123,11 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-        //Data Gathering
 
-        mUploads = new ArrayList<>();
-        final DatabaseReference mDatabaseRef = FirebaseDatabase.getInstance().getReference(PATH);
-        mDatabaseRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Upload upload = postSnapshot.getValue(Upload.class);
-                    mUploads.add(upload);
-                    Log.d("COUNT", String.valueOf(mUploads.size()));
-                }
-                Collections.reverse(mUploads);
-                mDatabaseRef.removeEventListener(this);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-
-        //Adapter
-
-        mAdapter = new ImageAdapter(mUploads);
+        mAdapter = new ImageAdapter(MainActivity.this, uploads);
         mRecyclerView.setAdapter(mAdapter);
         mProgressCircle.setVisibility(View.INVISIBLE);
 
-        //Staff Intent Button
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, StaffActivity.class);
-                if (firstStart || firstStartFromActivity) intent.putExtra("First Launch", true);
-                startActivity(intent);
-
-            }
-        });
 
         drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -187,12 +149,13 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-
 
 
     @Override
@@ -218,6 +181,10 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_post) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             if (firstStartFromActivity || firstStart) intent.putExtra("First Launch", true);
+            startActivity(intent);
+        } else if (id == R.id.nav_staffDirectory){
+            Intent intent = new Intent(MainActivity.this, StaffActivity.class);
+            if (firstStart || firstStartFromActivity) intent.putExtra("First Launch", true);
             startActivity(intent);
         }
 

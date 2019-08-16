@@ -28,7 +28,8 @@
         <activity android:name=".StaffListItem"></activity>
         <activity
             android:name=".Activities.MapActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme"
+            android:label="Map"></activity>
         <activity
             android:name=".Activities.LoginActivity"
             android:theme="@style/AppTheme"
