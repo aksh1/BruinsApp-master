@@ -1,7 +1,6 @@
 package com.example.bruins.Activities;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,6 +20,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -59,12 +59,15 @@ public class MainActivity extends AppCompatActivity
 
     private AdView mAdView;
 
+    private boolean touching;
+    private boolean scrolling;
+
     private int i = 2;
 
     private List<Upload> mUploads = new ArrayList<>();
 
     @SuppressLint("HandlerLeak")
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @androidx.annotation.RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,18 +116,20 @@ public class MainActivity extends AppCompatActivity
 
         handler = new Handler() {
             public void handleMessage(android.os.Message msg) {
-                swipeView.postDelayed(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        startActivity(new Intent(getApplicationContext(), SplashActivity.class));
-                    }
-                }, 500);
+                swipeView.postDelayed(() -> startActivity(new Intent(getApplicationContext(), SplashActivity.class)), 500);
             }
         };
 
-        mUploads.add(uploads.get(0));
-        mUploads.add(uploads.get(1));
+        if(uploads.size() == 1){
+            mUploads.add(uploads.get(0));
+        }
+
+        if (uploads.size() >= 2){
+            mUploads.add(uploads.get(0));
+            mUploads.add(uploads.get(1));
+        }
+
+
 
 
 
@@ -143,14 +148,25 @@ public class MainActivity extends AppCompatActivity
 //            }
 //        });
 
-       mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        NestedScrollView scrollView = findViewById(R.id.scrollView);
+
+        scrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+            Log.d("TOUCHING", "TRUE");
+            touching = true;
+            addDataToList();
+        });
+
+
+
+
+       mRecyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener() {
            @Override
-           public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-               super.onScrollStateChanged(recyclerView, newState);
+           public void onLoadMore() {
                Log.d("SCROLLING", "TRUE");
-               addDataToList();
+
+
            }
-       }) ;
+       });
 
 
 
@@ -166,7 +182,7 @@ public class MainActivity extends AppCompatActivity
 
     public void addDataToList(){
 
-        Integer length = uploads.size();
+        int length = uploads.size();
 
         Log.d("SIZE", String.valueOf(uploads.size()));
         Log.d("I", String.valueOf(i));

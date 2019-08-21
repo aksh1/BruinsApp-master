@@ -15,10 +15,10 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+
 import com.example.bruins.R;
 import com.example.bruins.Upload;
 import com.github.chrisbanes.photoview.PhotoView;
-import com.koushikdutta.ion.Ion;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -58,15 +58,17 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
                 .load(uploadCurrent.getImageUrl())
                 .placeholder(R.mipmap.ic_launcher)
                 .noFade()
-                .resize(600, 400)
-                .centerCrop()
+//                .resize(500, 400)
+//                .centerCrop()
                 .into(holder.imageView);
+
+        Log.d("PROFILEPIC", uploadCurrent.getProfilePicture());
 
         Picasso.get()
                 .load(uploadCurrent.getProfilePicture())
                 .placeholder(R.mipmap.ic_launcher)
                 .noFade()
-                .resize(100, 100)
+                .resize(50, 50)
                 .centerCrop()
                 .into(holder.profilePic);
     }

@@ -11,10 +11,14 @@ android {
         applicationId "com.example.bruins"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode 128
+        versionName "1.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+    }
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
     }
     buildTypes {
         release {
@@ -51,7 +55,7 @@ dependencies {
     implementation 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
     implementation 'com.google.firebase:firebase-ads:18.0.0'
     implementation 'com.android.support:multidex:1.0.3'
-    compile 'com.koushikdutta.ion:ion:2.+'
+    implementation 'com.github.ar-android:AQuery:1.0.3'
 
 
 }
