@@ -28,9 +28,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.bruins.R;
 import com.example.bruins.Upload;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
+
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -57,8 +55,6 @@ public class MainActivity extends AppCompatActivity
 
     private DrawerLayout drawer;
 
-    private AdView mAdView;
-
     private boolean touching;
     private boolean scrolling;
 
@@ -82,13 +78,6 @@ public class MainActivity extends AppCompatActivity
             showStartDialog();
         }
 
-        MobileAds.initialize(this,
-                "ca-app-pub-3543335372228589~7456143063");
-
-
-        mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -98,7 +87,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        toolbar.inflateMenu(R.menu.main);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
@@ -207,12 +195,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
 
 
     @Override
