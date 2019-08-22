@@ -11,9 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.bruins.Activities.MainActivity;
 import com.example.bruins.R;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
+
 
 import java.util.Objects;
 

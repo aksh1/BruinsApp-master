@@ -217,10 +217,10 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, MapActivity.class);
             startActivity(intent);
             mProgressCircle.setVisibility(View.GONE);
-        } else if (id == R.id.nav_post) {
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            if (firstStartFromActivity || firstStart) intent.putExtra("First Launch", true);
-            startActivity(intent);
+//        } else if (id == R.id.nav_post) {
+//            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+//            if (firstStartFromActivity || firstStart) intent.putExtra("First Launch", true);
+//            startActivity(intent);
         } else if (id == R.id.nav_staffDirectory){
             Intent intent = new Intent(MainActivity.this, StaffActivity.class);
             if (firstStart || firstStartFromActivity) intent.putExtra("First Launch", true);
