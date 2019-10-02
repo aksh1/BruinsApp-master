@@ -74,76 +74,70 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    rootRef = FirebaseDatabase.getInstance().getReference("users");
-                    rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String email = mEmail.getText().toString();
-                            String regx = ".";
-                            char[] ca = regx.toCharArray();
-                            for (char c : ca) {
-                                email = email.replace(""+c, "");
-                            }
-                            if (!snapshot.hasChild(email)) {
-                                //If it is the first time the user is logging in ever so it has no profile pic
-                                Log.d("FIRSTTIMELOGIN", "TRUE");
-                                databaseUser = new User(email, mUsername.getText().toString(), mPassword.getText().toString(),
-                                        defaultPic);
-                            }
+        mAuthListener = firebaseAuth -> {
+            user = firebaseAuth.getCurrentUser();
+            if (user != null) {
+                rootRef = FirebaseDatabase.getInstance().getReference("users");
+                rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String email = mEmail.getText().toString();
+                        String regx = ".";
+                        char[] ca = regx.toCharArray();
+                        for (char c : ca) {
+                            email = email.replace(""+c, "");
                         }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                        if (!snapshot.hasChild(email)) {
+                            //If it is the first time the user is logging in ever so it has no profile pic
+                            Log.d("FIRSTTIMELOGIN", "TRUE");
+                            databaseUser = new User(email, mUsername.getText().toString(), mPassword.getText().toString(),
+                                    defaultPic);
                         }
-                    });
+                    }
 
-                    toastMessage("Successfully signed in with: " + user.getEmail());
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+                toastMessage("Successfully signed in with: " + user.getEmail());
 
 
-                    Intent intent = new Intent(LoginActivity.this, ImagesUploadActivity.class).putExtra("Email",
-                            user.getEmail());
-                    recentlyLoggedIn = false;
-                    startActivity(intent);
+                Intent intent = new Intent(LoginActivity.this, ImagesUploadActivity.class).putExtra("Email",
+                        user.getEmail());
+                recentlyLoggedIn = false;
+                startActivity(intent);
 
 
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                    toastMessage("You are signed out.");
-                }
-                //
+            } else {
+                // User is signed out
+                Log.d(TAG, "onAuthStateChanged:signed_out");
+                toastMessage("You are signed out.");
             }
+            //
         }
 
         ;
 
-        btnSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String email = mEmail.getText().toString();
-                String pass = mPassword.getText().toString();
-                if (!email.equals("") && !pass.equals("")) {
-                    mAuth.signInWithEmailAndPassword(email, pass).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                        @Override
-                        public void onSuccess(AuthResult authResult) {
-                            recentlyLoggedIn = true;
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            toastMessage(e.getMessage());
-                        }
-                    });
+        btnSignIn.setOnClickListener(view -> {
+            String email = mEmail.getText().toString();
+            String pass = mPassword.getText().toString();
+            if (!email.equals("") && !pass.equals("")) {
+                mAuth.signInWithEmailAndPassword(email, pass).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        recentlyLoggedIn = true;
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        toastMessage(e.getMessage());
+                    }
+                });
 
-                } else {
-                    toastMessage("You didn't fill in all the fields.");
-                }
+            } else {
+                toastMessage("You didn't fill in all the fields.");
             }
         });
 
