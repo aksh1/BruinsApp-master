@@ -1,4 +1,4 @@
-package com.example.bruins;
+package com.akashvig.schs;
 
 public class Staff {
     private String name;

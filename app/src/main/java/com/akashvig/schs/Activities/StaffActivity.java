@@ -1,4 +1,4 @@
-package com.example.bruins.Activities;
+package com.akashvig.schs.Activities;
 
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
@@ -26,8 +26,8 @@ import android.widget.ProgressBar;
 import androidx.appcompat.widget.SearchView;
 import android.widget.Toast;
 
-import com.example.bruins.R;
-import com.example.bruins.Staff;
+import com.akashvig.schs.R;
+import com.akashvig.schs.Staff;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

@@ -1,4 +1,4 @@
-package com.example.bruins.Activities;
+package com.akashvig.schs.Activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -31,8 +31,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
-import com.example.bruins.R;
-import com.example.bruins.Upload;
+import com.akashvig.schs.R;
+import com.akashvig.schs.Upload;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;

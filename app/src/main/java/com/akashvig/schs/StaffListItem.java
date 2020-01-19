@@ -1,11 +1,10 @@
-package com.example.bruins;
+package com.akashvig.schs;
 
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 

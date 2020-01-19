@@ -1,13 +1,12 @@
-package com.example.bruins.Activities;
+package com.akashvig.schs.Activities;
 
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
-import com.example.bruins.Activities.MainActivity;
-import com.example.bruins.FragmentOne;
-import com.example.bruins.FragmentTwo;
-import com.example.bruins.R;
+import com.akashvig.schs.FragmentOne;
+import com.akashvig.schs.FragmentTwo;
+import com.akashvig.schs.R;
 import com.google.android.material.tabs.TabLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;

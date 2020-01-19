@@ -1,4 +1,4 @@
-package com.example.bruins.Activities;
+package com.akashvig.schs.Activities;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -26,8 +25,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.bruins.R;
-import com.example.bruins.Upload;
+import com.akashvig.schs.R;
+import com.akashvig.schs.Upload;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -36,7 +35,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.bruins.Activities.SplashActivity.uploads;
+import static com.akashvig.schs.Activities.SplashActivity.uploads;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {

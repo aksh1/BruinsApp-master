@@ -1,4 +1,4 @@
-package com.example.bruins.Activities;
+package com.akashvig.schs.Activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,8 +17,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.bruins.R;
-import com.example.bruins.User;
+import com.akashvig.schs.R;
+import com.akashvig.schs.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -34,7 +34,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 
-import static com.example.bruins.Activities.ImagesUploadActivity.defaultPic;
+import static com.akashvig.schs.Activities.ImagesUploadActivity.defaultPic;
 
 public class LoginActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.example.bruins;
+package com.akashvig.schs;
 
 import android.content.IntentFilter;
 import android.os.Build;

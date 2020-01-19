@@ -1,4 +1,4 @@
-package com.example.bruins;
+package com.akashvig.schs;
 
 import org.junit.Test;
 

@@ -1,10 +1,9 @@
-package com.example.bruins;
+package com.akashvig.schs;
 
 import android.net.Uri;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;

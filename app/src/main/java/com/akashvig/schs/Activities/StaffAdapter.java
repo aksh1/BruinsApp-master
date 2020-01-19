@@ -1,4 +1,4 @@
-package com.example.bruins.Activities;
+package com.akashvig.schs.Activities;
 
 
 import android.content.Context;
@@ -16,8 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import com.example.bruins.R;
-import com.example.bruins.Staff;
+import com.akashvig.schs.R;
+import com.akashvig.schs.Staff;
 
 import java.util.ArrayList;
 import java.util.List;
