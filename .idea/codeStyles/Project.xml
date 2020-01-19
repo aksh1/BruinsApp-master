@@ -18,6 +18,7 @@
             </rule>
           </section>
           <section>
+            <rule>
               <match>
                 <AND>
                   <NAME>xmlns:.*</NAME>
